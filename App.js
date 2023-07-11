@@ -1,20 +1,37 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground } from 'react-native';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+
+    const image = require('./resources/bg.jpg')
+
+    return (
+        <View style={{flex: 1}}>
+            <ImageBackground source={image} style={styles.image}>
+                <View style={styles.coverView}>
+                    <Text style={styles.txtHeader}>Lista de Tarefas - Danki Code</Text>
+                </View>
+            </ImageBackground>
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    image: {
+        width: '100%',
+        height: 80,
+        resizeMode: 'cover'
+    },
+    coverView: {
+        width: '100%',
+        height: 80,
+        backgroundColor: 'rgba(0,0,0,0.5)'
+    },
+    txtHeader: {
+        textAlign: 'center',
+        color: 'white',
+        fontSize: 20,
+        marginTop: 25
+    }
+
 });
