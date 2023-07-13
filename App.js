@@ -45,8 +45,13 @@ export default function App() {
     }
 
     const deleteTask = (id) => {
-        alert('Deleted task ' + id);
-        //TODO: Delete task
+        alert('Task was deleted with success');
+
+        let newTasks = tasks.filter((item) => {
+            return item.id != id;
+        });
+        
+        setTasks(newTasks);
     };
 
     return (
