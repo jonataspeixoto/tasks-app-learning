@@ -1,8 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AntDesign } from '@expo/vector-icons';
-import * as SplashScreen from 'expo-splash-screen';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, ScrollView} from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import {
     useFonts,
     Lato_100Thin,
@@ -16,26 +15,39 @@ import {
     Lato_900Black,
     Lato_900Black_Italic,
 } from '@expo-google-fonts/lato';
-
-SplashScreen.preventAutoHideAsync();
+import uuid from 'react-native-uuid';
 
 export default function App() {
 
     const image = require('./resources/bg.jpg')
 
+    const [tasks, setTasks] = useState([
+        {
+            id: uuid.v4(),
+            task: "My task 1."
+        },
+        {
+            id: uuid.v4(),
+            task: "My task 2."
+        },
+        {
+            id: uuid.v4(),
+            task: "My task 3."
+        }
+    ]);
+
     let [fontsLoaded] = useFonts({
         Lato_400Regular,
     });
 
-    const onLayoutRootView = useCallback(async () => {
-        if (fontsLoaded) {
-            await SplashScreen.hideAsync();
-        }
-    }, [fontsLoaded]);
-
     if (!fontsLoaded) {
         return null;
     }
+
+    const deleteTask = (id) => {
+        alert('Deleted task ' + id);
+        //TODO: Delete task
+    };
 
     return (
         <ScrollView style={{ flex: 1 }}>
@@ -45,87 +57,24 @@ export default function App() {
                     <Text style={styles.txtHeader}>Lista de Tarefas - Danki Code</Text>
                 </View>
             </ImageBackground>
-            <View style={styles.singleTask}>
-                <View style={{flex: 1, width: '100%', padding: 10}}>
-                    <Text>My number 1 task from XX day of XX month</Text>
-                </View>
-                <View style={{alignItems: 'flex-end', flex: 1, padding: 10}}>
-                    <TouchableOpacity>
-                        <AntDesign name="minuscircleo" size={24} color="black" />
-                    </TouchableOpacity>
-                </View>
-            </View>
-            <View style={styles.singleTask}>
-                <View style={{flex: 1, width: '100%', padding: 10}}>
-                    <Text>My number 1 task from XX day of XX month</Text>
-                </View>
-                <View style={{alignItems: 'flex-end', flex: 1, padding: 10}}>
-                    <TouchableOpacity>
-                        <AntDesign name="minuscircleo" size={24} color="black" />
-                    </TouchableOpacity>
-                </View>
-            </View>
-            <View style={styles.singleTask}>
-                <View style={{flex: 1, width: '100%', padding: 10}}>
-                    <Text>My number 1 task from XX day of XX month</Text>
-                </View>
-                <View style={{alignItems: 'flex-end', flex: 1, padding: 10}}>
-                    <TouchableOpacity>
-                        <AntDesign name="minuscircleo" size={24} color="black" />
-                    </TouchableOpacity>
-                </View>
-            </View>
-            <View style={styles.singleTask}>
-                <View style={{flex: 1, width: '100%', padding: 10}}>
-                    <Text>My number 1 task from XX day of XX month</Text>
-                </View>
-                <View style={{alignItems: 'flex-end', flex: 1, padding: 10}}>
-                    <TouchableOpacity>
-                        <AntDesign name="minuscircleo" size={24} color="black" />
-                    </TouchableOpacity>
-                </View>
-            </View>
-            <View style={styles.singleTask}>
-                <View style={{flex: 1, width: '100%', padding: 10}}>
-                    <Text>My number 1 task from XX day of XX month</Text>
-                </View>
-                <View style={{alignItems: 'flex-end', flex: 1, padding: 10}}>
-                    <TouchableOpacity>
-                        <AntDesign name="minuscircleo" size={24} color="black" />
-                    </TouchableOpacity>
-                </View>
-            </View>
-            <View style={styles.singleTask}>
-                <View style={{flex: 1, width: '100%', padding: 10}}>
-                    <Text>My number 1 task from XX day of XX month</Text>
-                </View>
-                <View style={{alignItems: 'flex-end', flex: 1, padding: 10}}>
-                    <TouchableOpacity>
-                        <AntDesign name="minuscircleo" size={24} color="black" />
-                    </TouchableOpacity>
-                </View>
-            </View>
-            <View style={styles.singleTask}>
-                <View style={{flex: 1, width: '100%', padding: 10}}>
-                    <Text>My number 1 task from XX day of XX month</Text>
-                </View>
-                <View style={{alignItems: 'flex-end', flex: 1, padding: 10}}>
-                    <TouchableOpacity>
-                        <AntDesign name="minuscircleo" size={24} color="black" />
-                    </TouchableOpacity>
-                </View>
-            </View>
-            <View style={styles.singleTask}>
-                <View style={{flex: 1, width: '100%', padding: 10}}>
-                    <Text>My number 1 task from XX day of XX month</Text>
-                </View>
-                <View style={{alignItems: 'flex-end', flex: 1, padding: 10}}>
-                    <TouchableOpacity>
-                        <AntDesign name="minuscircleo" size={24} color="black" />
-                    </TouchableOpacity>
-                </View>
-            </View>
-        </ScrollView>
+
+            {
+                tasks.map(( item ) => {
+                    return (
+                        <View key={item.id} style={styles.singleTask}>
+                            <View style={{ flex: 1, width: '100%', padding: 10 }}>
+                                <Text>{item.task}</Text>
+                            </View>
+                            <View style={{ alignItems: 'flex-end', flex: 1, padding: 10 }}>
+                                <TouchableOpacity onPress={() => deleteTask(item.id)}>
+                                    <AntDesign name="minuscircleo" size={24} color="black" />
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    )
+                })
+            }
+        </ScrollView >
     );
 }
 
@@ -147,7 +96,7 @@ const styles = StyleSheet.create({
         marginTop: 30,
         fontFamily: 'Lato_400Regular'
     },
-    singleTask:{
+    singleTask: {
         marginTop: 30,
         width: '100%',
         borderBottomWidth: 1,
