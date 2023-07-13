@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { AntDesign } from '@expo/vector-icons';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, ScrollView, TextInput, TouchableHighlight, Modal } from 'react-native';
 import {
     useFonts,
     Lato_100Thin,
@@ -36,6 +36,9 @@ export default function App() {
         }
     ]);
 
+    const [modal, setModalVisible] = useState(true);
+
+
     let [fontsLoaded] = useFonts({
         Lato_400Regular,
     });
@@ -50,13 +53,37 @@ export default function App() {
         let newTasks = tasks.filter((item) => {
             return item.id != id;
         });
-        
+
         setTasks(newTasks);
     };
 
     return (
         <ScrollView style={{ flex: 1 }}>
             <StatusBar hidden />
+
+            <Modal
+                animationType='slide'
+                transparent={true}
+                visible={modal}
+                onRequestClose={() => {
+                    Alert.alert('Modal has been closed.')
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <TextInput autoFocus={true}></TextInput>
+                        <TouchableHighlight
+                            style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
+                            onPress={() => {
+                                setModalVisible(!modal)
+                            }}
+                        >
+                            <Text style={styles.textStyle}>Add Task</Text>
+                        </TouchableHighlight>
+                    </View>
+                </View>
+            </Modal>
+
             <ImageBackground source={image} style={styles.image}>
                 <View style={styles.coverView}>
                     <Text style={styles.txtHeader}>Lista de Tarefas - Danki Code</Text>
@@ -64,7 +91,7 @@ export default function App() {
             </ImageBackground>
 
             {
-                tasks.map(( item ) => {
+                tasks.map((item) => {
                     return (
                         <View key={item.id} style={styles.singleTask}>
                             <View style={{ flex: 1, width: '100%', padding: 10 }}>
@@ -79,7 +106,18 @@ export default function App() {
                     )
                 })
             }
-        </ScrollView >
+            <TouchableOpacity
+                style={styles.btnAddTask}
+                onPress={() => setModalVisible(true)}
+            >
+                <Text
+                    style={styles.txtAddTask}
+                >
+                    Add Task
+                </Text>
+            </TouchableOpacity>
+
+        </ScrollView>
     );
 }
 
@@ -108,5 +146,52 @@ const styles = StyleSheet.create({
         borderBottomColor: 'black',
         flexDirection: 'row',
         paddingBottom: 10
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.5)'
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        zIndex: 5
+    },
+    openButton: {
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center'
+    },
+    btnAddTask: {
+        width: 200,
+        padding: 8,
+        backgroundColor: 'gray',
+        marginTop: 20
+    },
+    txtAddTask: {
+        textAlign: 'center',
+        color: 'white'
     }
 });
