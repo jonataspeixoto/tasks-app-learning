@@ -21,23 +21,10 @@ export default function App() {
 
     const image = require('./resources/bg.jpg')
 
-    const [tasks, setTasks] = useState([
-        {
-            id: uuid.v4(),
-            task: "My task 1."
-        },
-        {
-            id: uuid.v4(),
-            task: "My task 2."
-        },
-        {
-            id: uuid.v4(),
-            task: "My task 3."
-        }
-    ]);
+    const [tasks, setTasks] = useState([]);
 
-    const [modal, setModalVisible] = useState(true);
-
+    const [modal, setModalVisible] = useState(false);
+    const [currentTask, setCurrentTask] = useState(false);
 
     let [fontsLoaded] = useFonts({
         Lato_400Regular,
@@ -46,10 +33,18 @@ export default function App() {
     if (!fontsLoaded) {
         return null;
     }
+    const addTask = () => {
+        setModalVisible(!modal);
+        
+        let task = {
+            id: uuid.v4(),
+            task: currentTask
+        }
+
+        setTasks([... tasks, task]);
+    }
 
     const deleteTask = (id) => {
-        alert('Task was deleted with success');
-
         let newTasks = tasks.filter((item) => {
             return item.id != id;
         });
@@ -71,11 +66,11 @@ export default function App() {
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <TextInput autoFocus={true}></TextInput>
+                        <TextInput onChangeText={(text) => setCurrentTask(text)} autoFocus={true}></TextInput>
                         <TouchableHighlight
                             style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
                             onPress={() => {
-                                setModalVisible(!modal)
+                                addTask()
                             }}
                         >
                             <Text style={styles.textStyle}>Add Task</Text>
