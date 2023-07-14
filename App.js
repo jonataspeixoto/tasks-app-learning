@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { AntDesign } from '@expo/vector-icons';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, ScrollView, TextInput, TouchableHighlight, Modal } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, ScrollView, TextInput, TouchableHighlight, Modal, AsyncStorage } from 'react-native';
 import {
     useFonts,
     Lato_100Thin,
@@ -30,18 +30,44 @@ export default function App() {
         Lato_400Regular,
     });
 
+    useEffect(() => {
+        (async () => {
+            try {
+                let currentTasks = await AsyncStorage.getItem('tasks');
+                if (currentTasks == null) {
+                    setTasks([]);
+                } else {
+                    setTasks(JSON.parse(currentTasks));
+                }
+            } catch (error) {
+            }
+        })();
+    }, [])
+
+    const saveTasks = async (tasks) => {
+        try {
+            await AsyncStorage.setItem('tasks'), JSON.stringify(tasks);
+        } catch (error) {
+        }
+    }
+
     if (!fontsLoaded) {
         return null;
     }
+
     const addTask = () => {
         setModalVisible(!modal);
-        
+
         let task = {
             id: uuid.v4(),
             task: currentTask
         }
 
-        setTasks([... tasks, task]);
+        let newTasks = [...tasks, task];
+        
+        setTasks(newTasks);
+
+        saveTasks(newTasks);
     }
 
     const deleteTask = (id) => {
@@ -50,6 +76,8 @@ export default function App() {
         });
 
         setTasks(newTasks);
+
+        saveTasks(newTasks);
     };
 
     return (
